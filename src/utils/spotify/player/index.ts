@@ -115,9 +115,16 @@ export default class SpotifyPlayerService extends EventEmitter {
    * @throws {Error} If an error occurs while fetching the player state.
    */
   public async getPlaybackStateAsync(): Promise<SpotifyPlayer | null> {
-    const response = await this.spotify.api.fetch<SpotifyPlayer>("/me/player");
+    try {
+      const response = await this.spotify.api.fetch<SpotifyPlayer>(
+        "/me/player"
+      );
 
-    return response.data;
+      return response.data;
+    } catch (error) {
+      logger.error("Error getting playback state on Spotify", error);
+      throw error;
+    }
   }
 
   /**
